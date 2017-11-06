@@ -8,7 +8,18 @@
     <script src="click.js"></script>
 </head>
 <body ng-app="buttons">
-<div class="container-fluid">
+	
+	 <div align="middle" class="container">
+    <label><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="uname" required>
+
+    <label><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+
+    <button type="submit">Login</button>
+  </div>
+
+<div ng-hide="true" class="container-fluid">
     <h1>Cash Register (with buttons)</h1>
     <div id="buttons" ng-controller="buttonCtrl" >
        <div ng-repeat="button in buttons">

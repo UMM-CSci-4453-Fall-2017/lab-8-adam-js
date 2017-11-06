@@ -6,13 +6,16 @@ port = process.env.PORT || 1337;
 
 credentials.host='ids.morris.umn.edu'; //setup database credentials
 
+var buttons;
 var connection = mysql.createConnection(credentials); // setup the connection
+sql = "select * from institutional_casey.till_buttons;"
+
 
 connection.connect(function(err){if(err){console.log(error)}});
 
 app.use(express.static(__dirname + '/public'));
 app.get("/buttons",function(req,res){
-  var sql = 'SELECT * FROM test.till_buttons';
+  var sql = 'SELECT * FROM institutional_casey.till_buttons';
   connection.query(sql,(function(res){return function(err,rows,fields){
      if(err){console.log("We have an error:");
              console.log(err);}
