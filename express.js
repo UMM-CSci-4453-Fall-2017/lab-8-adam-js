@@ -1,3 +1,5 @@
+async = require)"async");
+
 var express=require('express'),
 mysql=require('mysql'),
 credentials=require('./credentials.json'),
@@ -24,38 +26,34 @@ app.get("/buttons",function(req,res){
 });
 
 app.get("/click",function(req,res){
-  // buttonID
-  var btnID = req.param('id');
-  var itemInfo = null;
-  var itemInfoSql = 'select invID, label, price from institutional_casey.current_transaction where buttonID = ' + btnID;
+  	var id = req.param('id');
+  	var sql = 'SELECT prices from prices where id = '+id;
+//  	var item_info;
 
-  queryPromiser(DBF, itemInfoSql)
-  .then(function (idResult) {
-    itemInfo = idResult[0];
-    var validSql = 'select exists (select invID from institutional_casey.current_transaction where invID = ' + itemInfo.invID + ') as isValid';
-    return queryPromiser(DBF, validSql);
-  })
-  .then(function (existResult) {
-    if (existResult[0].isValid) {
-      // Increase amount by 1
-      var updateSql = 'UPDATE institutional_casey.current_transaction SET amount = amount + 1 WHERE invID = ' + itemInfo.invID;
-      return queryPromiser(DBF, updateSql);
-    } else {
-      // Create a new one
-      var insertSql = 'insert into institutional_casey.current_transaction values (' + itemInfo.invID + ',' + 1 + ',\"' + itemInfo.label + '\",' + itemInfo.price + ')';
-      return queryPromiser(DBF, insertSql);
-    }
-  })
-  .then(function (dummy) {
-    var showSql = 'select * from institutional_casey.current_transaction';
-    return queryPromiser(DBF, showSql);
-  })
-  .then(function (currentTransaction) {
-    res.send(currentTransaction);
-  })
-  .catch(function(err){console.log("DANGER:",err)});
+	console.log("Attempting sql ->"+sql+"<-");
+
+	async.series([
+		function(callback){
+			connection.query(sql,(function(res){return function(err,rows,fields){
+    				if(err){console.log("We have an insertion error:");
+        	     		console.log(err);}
+    	 			res.send(err); // Let the upstream guy know how it went
+//				item_info = rows[0][prices];
+	 }})(res));	
+	 callback();}]);
+}
+
+
+app.get("/user",function(req,res){
+	var userID = req.param('userID');
+	var sql = 'SELECT * FROM XaiMarsh.Lab8_User where userID = '+userID;
+	connection.query(sql,(function(res){return function(err,rows,fields){
+		if(err){console.log("We have an error:");
+			console.log(err);}
+		res.send(rows);
+	}})(res));
+
 });
-
 
 
 //app.get("/click",function(req,res){

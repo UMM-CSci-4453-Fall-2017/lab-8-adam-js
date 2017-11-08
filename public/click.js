@@ -12,12 +12,12 @@ function ButtonCtrl($scope,buttonApi){
 	$scope.currenT=[];
 	$scope.total= 0;
 
-
 	var loading = false;
 
 	function isLoading(){
 		return loading;
 	}
+
 	function refreshButtons(){
 		loading=true;
 		$scope.errorMessage='';
@@ -31,37 +31,38 @@ function ButtonCtrl($scope,buttonApi){
 				loading=false;
 			});
 	}
-	function buttonClick($event){
-		$scope.errorMessage='';
-		buttonApi.clickButton($event.target.id)
-			.success(function(currenT){
-			$scope.currenT = currenT;
-			$scope.total = TotalAmount(curenT)
-			})
-			.error(function(){$scope.errorMessage="Unable click";});
-	}
-	refreshButtons();  //make sure the buttons are loaded
+
+ function buttonClick($event){
+     $scope.errorMessage='';
+     buttonApi.clickButton($event.target.id)
+        .success(function(){refreshTrans()})
+        .error(function(){$scope.errorMessage="Unable click";});
 
 }
-function changeUser(username, password){
-	$scope.username = username;
-	$scope.password = password;
-	buttonApi.changeUser(username,password);
-	.success(function(){})
-		.error(function(){$scope.errorMessage="Unable to change user";});
-}
+
+// function changeUser(username, password){
+//	$scope.username = username;
+//	$scope.password = password;
+//	buttonApi.changeUser(username,password);
+//	.success(function(){})
+//		.error(function(){$scope.errorMessage="Unable to change user";});
+//}
 
 function buttonApi($http,apiUrl){
-	return{
-		getButtons: function(){
-			var url = apiUrl + '/buttons';
-			return $http.get(url);
-		},
-		clickButton: function(id){
-			var url = apiUrl+'/click?id='+id;
-			//      console.log("Attempting with "+url);
-			return $http.get(url); // Easy enough to do this way
-		}
-	};
+  return{
+    getButtons: function(){
+      var url = apiUrl + '/buttons';
+      return $http.get(url);
+    },
+    clickButton: function(id){
+      var url = apiUrl+'/click?id='+id;
+//      console.log("Attempting with "+url);
+      return $http.get(url); // Easy enough to do this way
+    },
+      removeButton: function(invID) {
+          var url = apiUrl+'/delete?id='+invID.substring(6);
+          console.log(invID.substring(6));
+          return $http.get(url);
+      }
+ };
 }
-
