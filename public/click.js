@@ -40,6 +40,8 @@ function ButtonCtrl($scope,buttonApi){
 
 }
 
+refreshButtons();
+
 // function changeUser(username, password){
 //	$scope.username = username;
 //	$scope.password = password;
@@ -47,6 +49,7 @@ function ButtonCtrl($scope,buttonApi){
 //	.success(function(){})
 //		.error(function(){$scope.errorMessage="Unable to change user";});
 //}
+}
 
 function buttonApi($http,apiUrl){
   return{
@@ -64,5 +67,6 @@ function buttonApi($http,apiUrl){
           console.log(invID.substring(6));
           return $http.get(url);
       }
- };
+ }
 }
+
