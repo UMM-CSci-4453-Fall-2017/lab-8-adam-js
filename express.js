@@ -28,20 +28,32 @@ app.get("/buttons",function(req,res){
 app.get("/click",function(req,res){
   	var id = req.param('id');
   	var sql = 'SELECT price from institutional_casey.prices where id = '+id;
-  	var item_info;
+  	var item_price;
 
 	console.log("Attempting sql ->"+sql+"<-");
 
 	async.series([
 		function(callback){
-			connection.query(sql,(function(res){return function(err,rows,fields){
-    				if(err){console.log("We have an insertion error:");
-        	     		console.log(err);}
+			connection.query(sql,(function(res){
+				return function(err,rows,fields){
+    				if(err){
+				console.log("We have an insertion error:");
+        	     		console.log(err);
+				}
     	 			res.send(err); // Let the upstream guy know how it went
-				item_info = rows[0];
+				item_price = rows[0];
 	 }})(res));	
 	 callback();}]);
 });
+app.get("/prices",function(req,res){
+	var sql = "select * from institutional_casey.prices";	
+  connection.query(sql,(function(res){return function(err,rows,fields){
+	  if(err){console.log("We have an error");
+		  console.log(err);}
+	  res.send(rows);
+  }})(res));
+});
+
 
 
 app.get("/user",function(req,res){

@@ -6,17 +6,16 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.4/angular.min.js"></script>
     <script src="click.js"></script>
-    <style>
-      #transaction-table {
-        position: fixed;
-        left: 500px;
-      }
-    </style>
+    
+    
+
 </head>
-<body ng-app="buttons">
+
+
+<body ng-app="buttons" ng-controller="buttonCtrl"> 
 <div class="container-fluid">
     <h1>Cash Register (with buttons)</h1>
-    <div id="buttons" ng-controller="buttonCtrl" >
+    <div id="buttons" >
        <div ng-repeat="button in buttons">
          <div style="position:absolute;left:{{button.left}}px;top:{{button.top}}px"><button id="{{button.buttonID}}" ng-click="buttonClick($event,'button.buttonID');" >{{button.label}}</button></div>
        </div>
@@ -26,9 +25,13 @@
          </div>
        </div>
        <div class="list-group" id="transaction-table">
-         <button type="button" class="list-group-item" id="invID-{{eachItem.invID}}" ng-repeat='eachItem in current_transaction' ng-click="deleteClick($event);">{{eachItem.label}} #{{eachItem.amount}} ${{(eachItem.price * eachItem.amount).toFixed(2)}}</button>         <div class="alert alert-info" role="alert">Total: ${{total}}</div>
+         <button type="button" class="list-group-item" id="id-{{eachItem.id}}" ng-repeat='eachItem in current_transaction' ng-click="deleteClick($event);">{{eachItem.label}} #{{eachItem.amount}} ${{(eachItem.price * eachItem.amount).toFixed(2)}}</button>         <div class="alert alert-info" role="alert">Total: ${{total}}</div>
        </div>
      </div>
 </div>
+<div ng-repeat="price in prices">
+		{{price.price}}
+</div>
+
 </body>
 </html>
