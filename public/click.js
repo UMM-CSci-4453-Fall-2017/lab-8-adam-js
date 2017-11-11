@@ -51,13 +51,6 @@ function ButtonCtrl($scope,buttonApi){
 
 	refreshButtons();
 
-	// function changeUser(username, password){
-	//	$scope.username = username;
-	//	$scope.password = password;
-	//	buttonApi.changeUser(username,password);
-	//	.success(function(){})
-	//		.error(function(){$scope.errorMessage="Unable to change user";});
-	//}
 }
 
 function buttonApi($http,apiUrl){

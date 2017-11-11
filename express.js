@@ -21,35 +21,32 @@ app.get("/buttons",function(req,res){
   connection.query(sql,(function(res){return function(err,rows,fields){
      if(err){console.log("We have an error:");
              console.log(err);}
+	  buttons=rows;
      res.send(rows);
   }})(res));
 });
 
 app.get("/click",function(req,res){
   	var id = req.param('id');
-  	var sql = 'SELECT price from institutional_casey.prices where id = '+id;
-  	var item_price;
+	fixed_index_id = id-1;
+	var label = buttons[fixed_index_id].label;
+        var item_price = prices[fixed_index_id].price;
+  	var sql = 'insert into institutional_casey.current_transaction values ("' + label +'"' + ',1,'+ item_price + ');';
 
 	console.log("Attempting sql ->"+sql+"<-");
-
-	async.series([
-		function(callback){
-			connection.query(sql,(function(res){
-				return function(err,rows,fields){
-    				if(err){
-				console.log("We have an insertion error:");
-        	     		console.log(err);
-				}
-    	 			res.send(err); // Let the upstream guy know how it went
-				item_price = rows[0];
-	 }})(res));	
-	 callback();}]);
+	
+	connection.query(sql,(function(res){return function(err,rows,fields){
+		if(err){console.log("We have an error:");
+			console.log(err);
+		}
+	}}));
 });
 app.get("/prices",function(req,res){
 	var sql = "select * from institutional_casey.prices";	
   connection.query(sql,(function(res){return function(err,rows,fields){
 	  if(err){console.log("We have an error");
 		  console.log(err);}
+	  prices = rows;
 	  res.send(rows);
   }})(res));
 });
@@ -67,31 +64,28 @@ app.get("/user",function(req,res){
 
 });
 
+//app.get("/delete"),function(req,res){
 
-//app.get("/click",function(req,res){
- // var id = req.param('id');
- // var sql = ''
-  //console.log("Attempting sql ->"+sql+"<-");
 
-  //connection.query(sql,(function(res){return function(err,rows,fields){
-     //if(err){console.log("We have an insertion error:");
-      //       console.log(err);}
-    // res.send(err); // Let the upstream guy know how it went
-  //}})(res));
-//});
 
-// Your other API handlers go here!
-// app.get("/changeUser",function(req,res){
-//	var sql = "select * from institutional_casey.users"	
- // connection.query(sql,(function(res){return function(err,rows,fields){	  
-    // if(err){console.log("We have an error:");
-  //           console.log(err);}
-//	  res.send(rows);
-  // }})(res));
-// });
-// app.get("/delete", function(req,res){
-//	var ID = req.param('id');
-//	var sql = 'Delete from institutional_casey.current_transaction where ID =' + ID;
 
-//}
+
+app.get("/removeItem/:id", function(req,res){
+  var resp = {};
+  resp.message = "Testing things in resp";
+  var id = req.params.id;
+  var sql = 'DELETE FROM institutional_casey.current_transaction where id = ' + id;
+  console.log("Attempting sql ->" + sql + "<-");
+
+ connection.query(sql,(function(res){
+    return function(err,rows,fields){
+     if(err){
+       resp.err = err;
+       console.log("We have a problem");
+       console.log(err);
+     }
+     res.send(resp);
+  }})(res));
+});
+
 app.listen(port);
