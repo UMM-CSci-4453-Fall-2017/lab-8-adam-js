@@ -35,11 +35,11 @@ app.get("/click",function(req,res){
 
 	console.log("Attempting sql ->"+sql+"<-");
 	
-	connection.query(sql,(function(res){return function(err,rows,fields){
+	connection.query(sql,(function(res){return function(err){
 		if(err){console.log("We have an error:");
 			console.log(err);
-		}
-	}}));
+		}	
+  }})(res));
 });
 app.get("/prices",function(req,res){
 	var sql = "select * from institutional_casey.prices";	
