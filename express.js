@@ -35,10 +35,12 @@ app.get("/click",function(req,res){
 
 	console.log("Attempting sql ->"+sql+"<-");
 	
-	connection.query(sql,(function(res){return function(err){
+	connection.query(sql,(function(res){return function(err,rows,fields){
 		if(err){console.log("We have an error:");
 			console.log(err);
-		}	
+		}
+		console.log(rows);
+		res.send(rows);
   }})(res));
 });
 app.get("/prices",function(req,res){
@@ -64,6 +66,17 @@ app.get("/user",function(req,res){
 
 });
 
+app.get("/trans",function(req,res){
+        var sql = 'SELECT * FROM institutional_casey.current_transaction;';
+        connection.query(sql,(function(res){return function(err,rows,fields){
+                if(err){console.log("We have an error:");
+                        console.log(err);}
+                res.send(rows);
+        }})(res));
+
+});
+
+
 //app.get("/delete"),function(req,res){
 
 
@@ -84,7 +97,7 @@ app.get("/removeItem/:id", function(req,res){
        console.log("We have a problem");
        console.log(err);
      }
-     res.send(resp);
+     res.send(res);
   }})(res));
 });
 

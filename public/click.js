@@ -12,11 +12,40 @@ function ButtonCtrl($scope,buttonApi){
 	$scope.currenT=[];
 	$scope.total= 0;
 	$scope.prices=[];
-
+	$scope.items = [];
+	item = {
+		"name":"",
+		"amount": 0,
+		"cost" : 0
+	}
 	var loading = false;
 
 	function isLoading(){
 		return loading;
+	}
+
+	function getItems(){
+		var transactions = $scope.currenT.length;
+		console.log('Hi!');
+		for(var i =0;i < transactions;i++){
+			currItem = $scope.currenT[i];
+			console.log('Got here');
+			$scope.items.push({
+				"name": currItem.label
+			})
+		}
+	}
+	function refreshTrans(){
+		loading = true;
+		$scope.errorMessage = '';
+		buttonApi.getTrans()
+			.success(function(data){
+				$scope.currentT = data;
+				loading = false;
+			})
+			.error(function(){
+				$scope.errorMessage = 'Unable to load current transactions';
+			});
 	}
 
 	function refreshButtons(){
@@ -48,9 +77,9 @@ function ButtonCtrl($scope,buttonApi){
 			.error(function(){$scope.errorMessage="Unable click";});
 
 	}
-
+	refreshTrans();
 	refreshButtons();
-
+        getItems();
 }
 
 function buttonApi($http,apiUrl){
@@ -80,6 +109,10 @@ function buttonApi($http,apiUrl){
 		},
 		getPrices: function(){
 			var url = apiUrl +'/prices';
+			return $http.get(url);
+		},
+		getTrans: function(){
+			var url = apiUrl + '/trans';
 			return $http.get(url);
 		}
 	}
