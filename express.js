@@ -31,7 +31,7 @@ app.get("/click",function(req,res){
 	fixed_index_id = id-1;
 	var label = buttons[fixed_index_id].label;
         var item_price = prices[fixed_index_id].price;
-  	var sql = 'insert into institutional_casey.current_transaction (label,price) values ("' + label +'",' + item_price +  ');';
+  	var sql = 'insert into institutional_casey.current_transaction (label,price,Amount,buttonID) values ("' + label +'",' + item_price +  ',1,' + id +') on duplicate key update Amount = Amount+1;';
 
 	console.log("Attempting sql ->"+sql+"<-");
 	

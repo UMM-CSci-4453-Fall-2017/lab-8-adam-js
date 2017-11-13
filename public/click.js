@@ -27,6 +27,7 @@ function ButtonCtrl($scope,buttonApi){
 	function getItems(){
 		var transactions = $scope.currenT.length;
 		console.log('Hi!');
+		console.log(transactions);
 		for(var i =0;i < transactions;i++){
 			currItem = $scope.currenT[i];
 			console.log('Got here');
@@ -40,8 +41,11 @@ function ButtonCtrl($scope,buttonApi){
 		$scope.errorMessage = '';
 		buttonApi.getTrans()
 			.success(function(data){
-				$scope.currentT = data;
+				$scope.currenT = data;
 				loading = false;
+		//		console.log("I am here!");
+		//		console.dir(data);
+		//		getItems();
 			})
 			.error(function(){
 				$scope.errorMessage = 'Unable to load current transactions';
@@ -79,7 +83,7 @@ function ButtonCtrl($scope,buttonApi){
 	}
 	refreshTrans();
 	refreshButtons();
-        getItems();
+       // getItems();
 }
 
 function buttonApi($http,apiUrl){
