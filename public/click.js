@@ -12,30 +12,23 @@ function ButtonCtrl($scope,buttonApi){
 	$scope.currenT=[];
 	$scope.total= 0;
 	$scope.prices=[];
-	$scope.items = [];
-	item = {
-		"name":"",
-		"amount": 0,
-		"cost" : 0
-	}
+	$scope.total = 0;
 	var loading = false;
 
 	function isLoading(){
 		return loading;
 	}
-
-	function getItems(){
-		var transactions = $scope.currenT.length;
-		console.log('Hi!');
-		console.log(transactions);
-		for(var i =0;i < transactions;i++){
-			currItem = $scope.currenT[i];
-			console.log('Got here');
-			$scope.items.push({
-				"name": currItem.label
-			})
+	function sum(a){
+	//	var i = 0;
+		$scope.total=0;
+		console.log($scope.currenT);
+		for(i = 0; i < a.length; i++){
+			console.log(a[i].price);
+			$scope.total = ($scope.total + (a[i].price * a[i].Amount));
+			console.log($scope.total);
 		}
 	}
+
 	function refreshTrans(){
 		loading = true;
 		$scope.errorMessage = '';
@@ -43,9 +36,7 @@ function ButtonCtrl($scope,buttonApi){
 			.success(function(data){
 				$scope.currenT = data;
 				loading = false;
-		//		console.log("I am here!");
-		//		console.dir(data);
-		//		getItems();
+				sum($scope.currenT);
 			})
 			.error(function(){
 				$scope.errorMessage = 'Unable to load current transactions';
@@ -83,7 +74,6 @@ function ButtonCtrl($scope,buttonApi){
 	}
 	refreshTrans();
 	refreshButtons();
-       // getItems();
 }
 
 function buttonApi($http,apiUrl){
@@ -94,7 +84,6 @@ function buttonApi($http,apiUrl){
 		},
 		clickButton: function(id){
 			var url = apiUrl+'/click?id='+id;
-			//      console.log("Attempting with "+url);
 			return $http.get(url); // Easy enough to do this way
 		},
 		removeItem: function(id) {
