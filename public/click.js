@@ -9,6 +9,7 @@ function ButtonCtrl($scope,buttonApi){
 	$scope.isLoading=isLoading;
 	$scope.refreshButtons=refreshButtons;
 	$scope.buttonClick=buttonClick;
+	$scope.removeItem = removeItem;
 	$scope.currenT=[];
 	$scope.total= 0;
 	$scope.prices=[];
@@ -41,6 +42,14 @@ function ButtonCtrl($scope,buttonApi){
 			.error(function(){
 				$scope.errorMessage = 'Unable to load current transactions';
 			});
+	}
+	function removeItem($event){
+		console.log('deleted');
+		$scope.errorMessage = '';
+		console.log($event.target.id);
+		buttonApi.removeItem($event.target.id)
+		.success(function(){refreshTrans()})
+		.error(function(){$scope.errorMessage="Unable remove";});
 	}
 
 	function refreshButtons(){
@@ -87,18 +96,13 @@ function buttonApi($http,apiUrl){
 			return $http.get(url); // Easy enough to do this way
 		},
 		removeItem: function(id) {
-			var url = apiUrl + '/removeItem/'+id;
+			var url = apiUrl + '/removeItem?id='+id;
 			return $http.get(url);
 		},
 		totalAmount: function(){
 			var url = apiUrl + '/total';
 			console.log("Attempting with "+url);
 			return $http.get(url);
-		},
-		DeleteButton: function(){
-			var url = apiUrl + '/delete';
-			console.log("Attempting with "+url);
-			return $http.post(url);
 		},
 		getPrices: function(){
 			var url = apiUrl +'/prices';
